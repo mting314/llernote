@@ -147,7 +147,9 @@ export function SortSetlistPanel({ candidate, songOrdinals }: SortSetlistPanelPr
                 value={leg.id}
                 title={label.full}
                 flexShrink={0}
-                maxW="15rem"
+                minW="0"
+                maxW="22rem"
+                overflow="hidden"
                 // The recipe sizes the trigger for one line of text, so two lines need an
                 // explicit height plus room under the venue for the 2px active indicator
                 // the list draws at its bottom edge. The `line` variant sets that padding
@@ -161,9 +163,23 @@ export function SortSetlistPanel({ candidate, songOrdinals }: SortSetlistPanelPr
                     length, which the smaller venue line would inherit verbatim and sit in
                     a line box half again its own height. A unitless ratio makes each line
                     lead proportionally to its own font size. */}
-                <Stack gap="0.5" alignItems="flex-start" minW="0" lineHeight="1.3">
-                  <HStack gap="1" minW="0">
-                    <Box maxW="full" textOverflow="ellipsis" overflow="hidden" whiteSpace="nowrap">
+                <Stack
+                  gap="0.5"
+                  alignItems="flex-start"
+                  minW="0"
+                  maxW="full"
+                  w="full"
+                  lineHeight="1.3"
+                >
+                  <HStack gap="1" minW="0" maxW="full" w="full">
+                    <Box
+                      flex="1"
+                      minW="0"
+                      maxW="full"
+                      textOverflow="ellipsis"
+                      overflow="hidden"
+                      whiteSpace="nowrap"
+                    >
                       {label.primary}
                     </Box>
                     {leg.note && (
@@ -181,7 +197,9 @@ export function SortSetlistPanel({ candidate, songOrdinals }: SortSetlistPanelPr
                   </HStack>
                   {label.secondary && (
                     <Box
+                      minW="0"
                       maxW="full"
+                      w="full"
                       color="fg.subtle"
                       fontSize="xs"
                       fontWeight="normal"

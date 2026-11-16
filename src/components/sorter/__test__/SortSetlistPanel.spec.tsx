@@ -323,4 +323,34 @@ describe('SortSetlistPanel with multiple legs', () => {
     // The tab already carries the name and venue; a heading repeating it read as clutter.
     expect(screen.queryByText(/·/)).toBeNull();
   });
+
+  it('renders long leg names with full title tooltip without crashing', () => {
+    const longLegs: Performance[] = [
+      {
+        ...performance,
+        id: '1',
+        performanceName: 'Bloom Garden Party Stage (埼玉公演) (Day.1)',
+        venue: 'ベルーナドーム（旧：メットライフドーム）'
+      },
+      {
+        ...performance,
+        id: '2',
+        performanceName: 'Bloom Garden Party Stage (埼玉公演) (Day.2)',
+        venue: 'ベルーナドーム（旧：メットライフドーム）',
+        date: '2026-03-02'
+      }
+    ];
+
+    const [candidate] = buildSortCandidates(longLegs, 'live');
+    render(<SortSetlistPanel candidate={candidate!} songOrdinals={new Map()} />);
+
+    const tabs = screen.getAllByRole('tab');
+    expect(tabs).toHaveLength(2);
+    expect(tabs[0]?.getAttribute('title')).toBe(
+      'Bloom Garden Party Stage (埼玉公演) (Day.1) — ベルーナドーム（旧：メットライフドーム）'
+    );
+    expect(tabs[1]?.getAttribute('title')).toBe(
+      'Bloom Garden Party Stage (埼玉公演) (Day.2) — ベルーナドーム（旧：メットライフドーム）'
+    );
+  });
 });
