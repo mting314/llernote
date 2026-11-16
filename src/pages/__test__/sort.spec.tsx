@@ -141,6 +141,38 @@ describe('/sort', () => {
     expect(localStorage.getItem('lives-sort-state')).toBeNull();
   });
 
+  it('preserves filters when switching comparison unit', async () => {
+    const user = userEvent.setup();
+    render(<Page />);
+
+    const attendedOnlyBtn = screen.getByRole('button', { name: /Attended only/i });
+    await user.click(attendedOnlyBtn);
+    expect(attendedOnlyBtn.getAttribute('aria-pressed')).toBe('false');
+
+    const searchInput = screen.getByPlaceholderText(/Search events, venues/i);
+    await user.type(searchInput, 'Bravo');
+    expect((searchInput as HTMLInputElement).value).toBe('Bravo');
+    expect(screen.getByText(/at least two lives/i)).not.toBeNull();
+
+    const unitSelect = screen.getByRole('combobox', { name: /Compare/i });
+    await user.selectOptions(unitSelect, 'performance');
+
+    const updatedSearchInput = screen.getByPlaceholderText(/Search events, venues/i) as HTMLInputElement;
+    expect(updatedSearchInput.value).toBe('Bravo');
+    expect(screen.getByRole('button', { name: /Attended only/i }).getAttribute('aria-pressed')).toBe(
+      'false'
+    );
+    expect(screen.getByText(/at least two lives/i)).not.toBeNull();
+
+    await user.selectOptions(unitSelect, 'live');
+    const restoredSearchInput = screen.getByPlaceholderText(/Search events, venues/i) as HTMLInputElement;
+    expect(restoredSearchInput.value).toBe('Bravo');
+    expect(screen.getByRole('button', { name: /Attended only/i }).getAttribute('aria-pressed')).toBe(
+      'false'
+    );
+    expect(screen.getByText(/at least two lives/i)).not.toBeNull();
+  });
+
   it('blocks starting when fewer than two lives are in the pool', () => {
     attendanceMap = { '1': attended('1') };
     render(<Page />);

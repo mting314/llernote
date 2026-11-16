@@ -29,18 +29,31 @@ const UNITS: SortUnit[] = ['live', 'performance'];
 export default function Page() {
   const [storedUnit, setUnit] = useLocalStorage<SortUnit>('llernote-sort-unit', 'live');
   const unit: SortUnit = storedUnit === 'performance' ? 'performance' : 'live';
-  return <SortPage key={unit} unit={unit} onUnitChange={setUnit} />;
+  const [filters, setFilters] = useState<LiveSortFilters>(EMPTY_LIVE_SORT_FILTERS);
+
+  return (
+    <SortPage
+      key={unit}
+      unit={unit}
+      onUnitChange={setUnit}
+      filters={filters}
+      onFiltersChange={setFilters}
+    />
+  );
 }
 
 function SortPage({
   unit,
-  onUnitChange
+  onUnitChange,
+  filters,
+  onFiltersChange
 }: {
   unit: SortUnit;
   onUnitChange: (unit: SortUnit) => void;
+  filters: LiveSortFilters;
+  onFiltersChange: (filters: LiveSortFilters) => void;
 }) {
   const { t } = useTranslation();
-  const [filters, setFilters] = useState<LiveSortFilters>(EMPTY_LIVE_SORT_FILTERS);
   const [setlistOpen, setSetlistOpen] = useState(false);
   const [shared, setShared] = useState<{ unit: SortUnit; ranking: SortCandidate[][] }>();
 
@@ -158,7 +171,7 @@ function SortPage({
               </Text>
             </HStack>
 
-            <LiveSortFiltersBar filters={filters} onChange={setFilters} />
+            <LiveSortFiltersBar filters={filters} onChange={onFiltersChange} />
 
             <HStack gap="3" flexWrap="wrap">
               <Button onClick={start} disabled={candidates.length < 2}>
