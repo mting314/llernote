@@ -28,7 +28,7 @@ jobs:
       - name: Checkout internal scripts repo
         uses: actions/checkout@v4
         with:
-          repository: hamzaabamboo/ll-sorter-scripts
+          repository: mting314/ll-sorter-scripts
           ref: main
           path: scripts/internal
           token: ${{ secrets.INTERNAL_REPO_TOKEN }}
